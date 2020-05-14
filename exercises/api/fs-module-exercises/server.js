@@ -20,6 +20,19 @@ const findFile = (name) => {
     });
   };
 
+const copyFile = (name) => {
+  const filePath = path.join(__dirname, "../assets", name);
+  return new Promise((resolve, reject) => {
+    fs.copyFile(filePath, __dirname, (error, data) => {
+      if(error) {
+        reject(error);
+      } else {
+        resolve(data);
+      }
+    })
+  })
+} 
+
 const server = http.createServer((req, res) => {
     const method = req.method;
     const route = url.parse(req.url).path;
@@ -32,6 +45,13 @@ const server = http.createServer((req, res) => {
             console.log(method, route, 200);
             res.end();
         });
+        // copyFile("index.html")  // how to chain other promise when we already have res.end?
+        // .then(() => {
+        //   console.log("file copied");
+        // })
+        // .catch(() => {
+        //   console.log("copying failed")
+        // })
     }
     else if(route === "/style.css") {
         res.writeHead(200, {"Content-Type": mime.getType("css")});
